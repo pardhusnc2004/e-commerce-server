@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
-    prodcutInStock: {
+    productInStock: {
         type: Boolean,
         default: false,
     },

@@ -5,8 +5,9 @@ import { generateToken } from "../utils/generate.token.js";
 export const SignUp = async (req, res) => {
     try {
         const {fullName, email, password, dateOfBirth, address, mobile} = req.body;
-        const existingUser = await USERMODEL.findOne({email:email, mobile:mobile});
-        if(existingUser) {
+        const existingUser = await USERMODEL.findOne({email:email});
+        const existingUser2 = await USERMODEL.findOne({mobile: mobile});
+        if(existingUser || existingUser2) {
             return res.status(409).json({message: "Email/ Mobile is already registered"});
         }
         const salt = await bcryptjs.genSalt(10);
@@ -20,12 +21,18 @@ export const SignUp = async (req, res) => {
             mobile: mobile
         });
         newUser.save();
-        generateToken(newUser, res);
-        return res.status(201).json({message: "Registration succesful"});
+        const userWithNoPassword = getUserWithoutPassword(newUser)
+        generateToken(userWithNoPassword, res);
+        return res.status(201).json({message: "Registration succesful", user: userWithNoPassword});
     } catch (error) {
         console.log('Error @SignUp -> user.controller.js')
         res.status(500).json({message: "Internal error occured"});
     }
+}
+
+const getUserWithoutPassword = (user) => {
+    const {password, ...userWithoutPassword} = newUser
+    return userWithoutPassword
 }
 
 export const Login = async (req, res) => {
@@ -39,8 +46,9 @@ export const Login = async (req, res) => {
         if(!validPassword) {
             return res.status(404).json({message: "Invalid credentials"});
         }
-        generateToken(existingUser, res);
-        return res.status(200).json({message: "Login succesful"});
+        const userWithNoPassword = getUserWithoutPassword(existingUser)
+        generateToken(userWithNoPassword, res);
+        return res.status(200).json({message: "Login succesful", user: userWithNoPassword});
     } catch (error) {
         console.log('Error @Login -> user.controller.js')
         res.status(500).json({message: "Internal error occured"});

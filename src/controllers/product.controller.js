@@ -2,7 +2,7 @@ import PRODUCTMODEL from "../models/product.model.js";
 
 export const AddProduct = async (req, res) => {
     try {
-        const {productName, minBuyQuantity, productCategory, productOwner, ProductImages, productDescription, productFeatures} = req.body;
+        const { productName, minBuyQuantity, productCategory, productOwner, ProductImages, productDescription, productFeatures, productPrice, productDiscount, productInStock } = req.body;
         const existingProduct = await PRODUCTMODEL.findOne({productName: productName, productOwner: productOwner});
         if(existingProduct) {
             return res.status(409).json({message: 'Similar Product already exists'});
@@ -14,7 +14,10 @@ export const AddProduct = async (req, res) => {
             productOwner: productOwner,
             productImages: ProductImages,
             productDescription: productDescription,
-            productFeatures: productFeatures
+            productFeatures: productFeatures,
+            productDiscount: productDiscount,
+            productPrice: productPrice,
+            prodcutInStock: productInStock
         });
         newProduct.save();
         return res.status(201).json({message: "Product added successfully"})
@@ -28,12 +31,12 @@ export const EditProduct = async (req, res) => {
     try {
         const { user } = req;
         const { productId } = req.params;
-        const { productName, minBuyQuantity, productCategory, productImages, productDescription, productFeatures } = req.body;
+        const { productName, minBuyQuantity, productCategory, productImages, productDescription, productFeatures, productInStock, productPrice, productDiscount } = req.body;
         const existingProduct = await PRODUCTMODEL.findOne({ productOwner: user._id, _id: productId });
         if(!existingProduct) {
             return res.status(403).json({message: "You are not authorized to edit this product/ product invalid"})
         }
-        const updatedProduct = await PRODUCTMODEL.findByIdAndUpdate(productId, {productName: productName, minBuyQuantity: minBuyQuantity, productCategory: productCategory, productImages: productImages, productDescription: productDescription, productFeatures: productFeatures});
+        const updatedProduct = await PRODUCTMODEL.findByIdAndUpdate(productId, {productName: productName, minBuyQuantity: minBuyQuantity, productCategory: productCategory, productImages: productImages, productDescription: productDescription, productFeatures: productFeatures, productDiscount: productDiscount, productPrice: productPrice, prodcutInStock: productInStock});
         return res.status(200).json({message: "Product updated successfully"});
     } catch (error) {
         console.log("Error @EditProduct -> prodcut.controller.js")

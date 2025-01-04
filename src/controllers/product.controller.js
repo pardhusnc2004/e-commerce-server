@@ -2,8 +2,9 @@ import PRODUCTMODEL from "../models/product.model.js";
 
 export const AddProduct = async (req, res) => {
     try {
-        const { productName, minBuyQuantity, productCategory, productOwner, ProductImages, productDescription, productFeatures, productPrice, productDiscount, productInStock } = req.body;
-        const existingProduct = await PRODUCTMODEL.findOne({productName: productName, productOwner: productOwner});
+        const { user } = req;
+        const { productName, minBuyQuantity, productCategory, ProductImages, productDescription, productFeatures, productPrice, productDiscount, productInStock } = req.body;
+        const existingProduct = await PRODUCTMODEL.findOne({productName: productName, productOwner: user._doc._id});
         if(existingProduct) {
             return res.status(409).json({message: 'Similar Product already exists'});
         }
@@ -11,7 +12,7 @@ export const AddProduct = async (req, res) => {
             productName: productName,
             minBuyQuantity: minBuyQuantity,
             productCategory: productCategory,
-            productOwner: productOwner,
+            productOwner: user._doc._id,
             productImages: ProductImages,
             productDescription: productDescription,
             productFeatures: productFeatures,
@@ -32,7 +33,7 @@ export const EditProduct = async (req, res) => {
         const { user } = req;
         const { productId } = req.params;
         const { productName, minBuyQuantity, productCategory, productImages, productDescription, productFeatures, productInStock, productPrice, productDiscount } = req.body;
-        const existingProduct = await PRODUCTMODEL.findOne({ productOwner: user._id, _id: productId });
+        const existingProduct = await PRODUCTMODEL.findOne({ productOwner: user._doc._id, _id: productId });
         if(!existingProduct) {
             return res.status(403).json({message: "You are not authorized to edit this product/ product invalid"})
         }
@@ -48,7 +49,7 @@ export const DeleteProdcut = async (req, res) => {
     try {
         const { user } = req;
         const { productId } = req.params;
-        const existingProduct = await PRODUCTMODEL.findOne({ productOwner: user._id, _id: productId });
+        const existingProduct = await PRODUCTMODEL.findOne({ productOwner: user._doc._id, _id: productId });
         if(!existingProduct) {
             return res.status(403).json({message: "You are not authorized to delete this product/ product invalid"})
         }

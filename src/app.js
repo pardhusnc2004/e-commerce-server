@@ -7,6 +7,8 @@ import { config } from 'dotenv';
 config();
 import authRouter from './routes/auth.routes.js'
 import protectedRouter from './routes/protected.route.js'
+import productRouter from './routes/product.route.js';
+import cartRouter from './routes/cart.route.js';
 
 const app = express();
 app.use(express.json());
@@ -20,6 +22,8 @@ app.use(cors({
 
 app.use('/api/auth', authRouter);
 app.use('/api/protected', protectedRouter);
+app.use('/api/products', productRouter);
+app.use('/api/carts', cartRouter);
 
 const PORT = process.env.PORT;
 

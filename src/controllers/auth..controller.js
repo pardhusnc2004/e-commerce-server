@@ -31,7 +31,7 @@ export const SignUp = async (req, res) => {
 }
 
 const getUserWithoutPassword = (user) => {
-    const {password, ...userWithoutPassword} = newUser
+    const {password, ...userWithoutPassword} = user
     return userWithoutPassword
 }
 

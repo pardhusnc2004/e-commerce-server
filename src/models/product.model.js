@@ -5,9 +5,21 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    productPrice: {
+        type: Number,
+        required: true
+    },
+    productDiscount: {
+        type: Number,
+        default: 0
+    },
     minBuyQuantity: {
         type: Number,
         default: 1
+    },
+    prodcutInStock: {
+        type: Boolean,
+        default: false,
     },
     productCategory: {
         type: [String],

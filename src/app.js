@@ -9,6 +9,7 @@ import authRouter from './routes/auth.routes.js'
 import protectedRouter from './routes/protected.route.js'
 import productRouter from './routes/product.route.js';
 import cartRouter from './routes/cart.route.js';
+import paymentRouter from './routes/payment.route.js';
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/protected', protectedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
+app.use('/api/payments', paymentRouter);
 
 const PORT = process.env.PORT;
 

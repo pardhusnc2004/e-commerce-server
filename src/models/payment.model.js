@@ -18,6 +18,9 @@ const paymentSchema = new mongoose.Schema({
     },
     paidAt: {
         type: Date,
+    },
+    transactionId: {
+        type: String, // from the payment gateway
     }
 }, {
     timestamps: true
